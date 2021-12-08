@@ -14,17 +14,59 @@ MODULE_DESCRIPTION("Modulo de cpu, Proyecto 1 SO1 - 201801677");
 MODULE_AUTHOR("Julio Emiliano Cifuentes Zabala");
 
 
-struct task_struct *proceso;//, *hijo;
-//struct list_head *procesos_hijos;
+struct task_struct *proceso, *hijo;
+struct list_head *procesos_hijos;
 
 
 // Funcion a ejecutarse cada vez que se lea el archivo ubicado en /proc
 static int escribir_archivo(struct seq_file *archivo, void *v){
     
-    seq_printf(archivo, "Escribiendo en el modulo CPU\n");
+    int contador_procesos, contador;
+    contador_procesos = 0;
+    contador = 0;
     for_each_process(proceso){
-        seq_printf(archivo, "Proceso %s (PID: %d)\n", proceso->comm, proceso->pid);
+        contador_procesos = contador_procesos+1;
     }
+    seq_printf(archivo, "{\n");
+    for_each_process(proceso){
+        contador = contador+1;
+        seq_printf(archivo, "\t{\n");
+        seq_printf(archivo, "\t\"state\": %8li,\n", proceso->state);
+        seq_printf(archivo, "\t\"process\": \"%s\",\n", proceso-> comm);
+        seq_printf(archivo, "\t\"pid\": %d,\n", proceso->pid);
+        seq_printf(archivo, "\t\"userid\": %d,\n", proceso->real_cred->uid);
+        //seq_printf(archivo, "Proceso %s (PID: %d)\n", proceso->comm, proceso->pid);
+        int contador_procesos_hijos;
+        contador_procesos_hijos = 0;
+        list_for_each(procesos_hijos, &(proceso->children)){
+            contador_procesos_hijos = contador_procesos_hijos+1;
+        }
+        seq_printf(archivo, "\t\"hijos\": ");
+        int contador2;
+        contador2 = 0;
+        if(contador_procesos_hijos>0){
+            list_for_each(procesos_hijos, &(proceso->children)){
+                contador2 = contador2+1;
+                seq_printf(archivo, " {\n");
+                hijo = list_entry(procesos_hijos, struct task_struct, sibling);
+                seq_printf(archivo, "\t\t\"process\": \"%s\",\n", hijo->comm);
+                seq_printf(archivo, "\t\t\"pid\": %d\n", hijo->pid);
+                seq_printf(archivo, "\t}");
+                if(contador2<contador_procesos_hijos){
+                    seq_printf(archivo,",");
+                }
+            }
+        }else{
+            seq_printf(archivo, "{ }\n");
+        }
+        //seq_printf(archivo, "\t}\n");
+        seq_printf(archivo, "\t}");
+        if(contador<contador_procesos){
+            seq_printf(archivo,",\n");
+        }
+    }
+    seq_printf(archivo, "\n}\n");
+
     return 0;
 }
 
