@@ -2,6 +2,12 @@
 
 ## Backend - Go
 
+Instalar golang con el comando
+```sudo apt install golang```
+
+Levantar el servidor
+```sudo sh ./build.sh```
+
 ## Frontend - Angular
 
 ## Modulos

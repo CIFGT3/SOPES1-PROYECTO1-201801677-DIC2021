@@ -27,21 +27,22 @@ static int escribir_archivo(struct seq_file *archivo, void *v){
     for_each_process(proceso){
         contador_procesos = contador_procesos+1;
     }
-    seq_printf(archivo, "{\n");
+    seq_printf(archivo, "[\n");
     for_each_process(proceso){
         contador = contador+1;
         seq_printf(archivo, "\t{\n");
+        // estado
         seq_printf(archivo, "\t\"state\": %8li,\n", proceso->state);
         seq_printf(archivo, "\t\"process\": \"%s\",\n", proceso-> comm);
         seq_printf(archivo, "\t\"pid\": %d,\n", proceso->pid);
+        //__kuid_val(task_uid(proceso)) que es otra manera de obtener el id del usuario
         seq_printf(archivo, "\t\"userid\": %d,\n", proceso->real_cred->uid);
-        //seq_printf(archivo, "Proceso %s (PID: %d)\n", proceso->comm, proceso->pid);
         int contador_procesos_hijos;
         contador_procesos_hijos = 0;
         list_for_each(procesos_hijos, &(proceso->children)){
             contador_procesos_hijos = contador_procesos_hijos+1;
         }
-        seq_printf(archivo, "\t\"hijos\": ");
+        seq_printf(archivo, "\t\"hijos\": [");
         int contador2;
         contador2 = 0;
         if(contador_procesos_hijos>0){
@@ -54,10 +55,12 @@ static int escribir_archivo(struct seq_file *archivo, void *v){
                 seq_printf(archivo, "\t}");
                 if(contador2<contador_procesos_hijos){
                     seq_printf(archivo,",");
+                }else{
+                    seq_printf(archivo, "]");
                 }
             }
         }else{
-            seq_printf(archivo, "{ }\n");
+            seq_printf(archivo, "]\n");
         }
         //seq_printf(archivo, "\t}\n");
         seq_printf(archivo, "\t}");
@@ -65,7 +68,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v){
             seq_printf(archivo,",\n");
         }
     }
-    seq_printf(archivo, "\n}\n");
+    seq_printf(archivo, "\n]\n");
 
     return 0;
 }
