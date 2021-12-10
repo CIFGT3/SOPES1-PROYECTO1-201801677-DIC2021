@@ -10,6 +10,15 @@ Levantar el servidor
 
 ## Frontend - Angular
 
+Levantar el servidor web
+```ng serve```
+
+Crear componentes
+```ng g c <nombre>```
+
+Crear servicios
+```ng g s <nombre>```
+
 ## Modulos
 Realizados en distro Ubuntu 20.04 LTS
 

@@ -8,8 +8,9 @@
 #include <linux/seq_file.h> // libreria seq_file y manejar el archivo en /proc/
 
 #include <linux/hugetlb.h> // para utilizar si_meminfo
-//#include <linux/sys.h>
-//#include <sys/sysinfo.h> // libreria sysinfo para obtener informacion de la memoria del sistema
+//#include <linux/vmstat.h> // librerias para calcular la memoria cache
+//#include <linux/swap.h>
+//#include <linux/mmzone.h>
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Modulo de memoria, Proyecto 1 SO1 - 201801677");
@@ -24,6 +25,14 @@ static int escribir_archivo(struct seq_file *archivo, void *v){
     long totalswap, freeswap, totalhigh, freehigh;
     int mem_unit;
     si_meminfo(&info);
+    /*
+    long cache;
+    cache = global_node_page_state(NR_FILE_PAGES) -
+			total_swapcache_pages() - info.bufferram;
+    if (cache < 0){
+        cache = 0;
+    }
+    */
     mem_unit = info.mem_unit; // es el multiplo por el que se muestran los tamanios en bytes
     // dimensiones convertidas a MB
     totalram = (info.totalram*mem_unit)/(1024*1024);
@@ -45,6 +54,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v){
     seq_printf(archivo, "\t\"totalhigh\":%8li,\n", totalhigh);
     seq_printf(archivo, "\t\"freehigh\":%8li,\n", freehigh);
     seq_printf(archivo, "\t\"memunit\":%d\n", mem_unit);
+    //seq_printf(archivo, "\t\"cache\": %8li\n", cache);
     seq_printf(archivo, "}\n");
     return 0;
 }

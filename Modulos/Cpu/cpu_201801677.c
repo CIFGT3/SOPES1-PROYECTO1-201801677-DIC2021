@@ -7,6 +7,7 @@
 #include <asm/uaccess.h> // for copy_from_user
 #include <linux/seq_file.h> // libreria seq_file y manejar el archivo en /proc/
 
+#include <linux/mm.h>  // get_mm_rss()
 #include <linux/sched.h>
 
 MODULE_LICENSE("GPL");
@@ -29,6 +30,12 @@ static int escribir_archivo(struct seq_file *archivo, void *v){
     }
     seq_printf(archivo, "[\n");
     for_each_process(proceso){
+        unsigned long rss;
+        if(proceso->mm){
+            rss = get_mm_rss(proceso->mm) << PAGE_SHIFT;
+        }else{
+            rss = 0;
+        }
         contador = contador+1;
         seq_printf(archivo, "\t{\n");
         // estado
@@ -37,6 +44,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v){
         seq_printf(archivo, "\t\"pid\": %d,\n", proceso->pid);
         //__kuid_val(task_uid(proceso)) que es otra manera de obtener el id del usuario
         seq_printf(archivo, "\t\"userid\": %d,\n", proceso->real_cred->uid);
+        seq_printf(archivo, "\t\"ram\": %8lu,\n", rss); // en bytes
         int contador_procesos_hijos;
         contador_procesos_hijos = 0;
         list_for_each(procesos_hijos, &(proceso->children)){

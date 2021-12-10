@@ -26,6 +26,7 @@ type Model_Cpu struct {
 	Process string 	`json:"process"`
 	Pid 	int		`json:"pid"`
 	Userid	int 	`json:"userid"`
+	Ram 	int		`json:"ram"`
 	Hijos []Children_Process `json:"hijos"`
 }
 
