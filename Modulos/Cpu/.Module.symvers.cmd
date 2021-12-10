@@ -1,1 +1,0 @@
-cmd_/home/julio/Documentos/Github/SOPES1-PROYECTO1-201801677-DIC2021/Modulos/Cpu/Module.symvers := sed 's/ko$$/o/' /home/julio/Documentos/Github/SOPES1-PROYECTO1-201801677-DIC2021/Modulos/Cpu/modules.order | scripts/mod/modpost -m -a   -o /home/julio/Documentos/Github/SOPES1-PROYECTO1-201801677-DIC2021/Modulos/Cpu/Module.symvers -e -i Module.symvers   -T -
