@@ -53,7 +53,8 @@ static int escribir_archivo(struct seq_file *archivo, void *v){
     seq_printf(archivo, "\t\"freeswap\":%8li,\n", freeswap);
     seq_printf(archivo, "\t\"totalhigh\":%8li,\n", totalhigh);
     seq_printf(archivo, "\t\"freehigh\":%8li,\n", freehigh);
-    seq_printf(archivo, "\t\"memunit\":%d\n", mem_unit);
+    seq_printf(archivo, "\t\"memunit\":%d,\n", mem_unit);
+    seq_printf(archivo, "\t\"cache\": 0\n");
     //seq_printf(archivo, "\t\"cache\": %8li\n", cache);
     seq_printf(archivo, "}\n");
     return 0;

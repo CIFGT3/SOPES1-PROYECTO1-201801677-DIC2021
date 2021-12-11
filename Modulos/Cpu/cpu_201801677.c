@@ -44,6 +44,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v){
         seq_printf(archivo, "\t\"pid\": %d,\n", proceso->pid);
         //__kuid_val(task_uid(proceso)) que es otra manera de obtener el id del usuario
         seq_printf(archivo, "\t\"userid\": %d,\n", proceso->real_cred->uid);
+        seq_printf(archivo, "\t\"user\": \"\",\n"); // nombre de usuario vacio
         seq_printf(archivo, "\t\"ram\": %8lu,\n", rss); // en bytes
         int contador_procesos_hijos;
         contador_procesos_hijos = 0;

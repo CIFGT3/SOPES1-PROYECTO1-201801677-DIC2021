@@ -8,6 +8,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { MemoriaComponent } from './components/memoria/memoria.component';
 import { CpuComponent } from './components/cpu/cpu.component';
+import { ProcesoComponent } from './components/proceso/proceso.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { CpuComponent } from './components/cpu/cpu.component';
     NavbarComponent,
     InicioComponent,
     MemoriaComponent,
-    CpuComponent
+    CpuComponent,
+    ProcesoComponent
   ],
   imports: [
     BrowserModule,
