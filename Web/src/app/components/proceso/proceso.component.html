@@ -1,1 +1,5 @@
-<p>proceso works!</p>
+<mat-list-item>
+    <h3 matLine class="text-primary">PID: {{proceso.pid}}, Name: {{proceso.process}} </h3>
+    <p matLine>Usuario: {{proceso.user}}, Estado: {{proceso.state}}, %Ram: {{proceso.ram}} </p>
+    <button class="btn btn-danger btn-sm" (click)="killProcess()" type="button">Kill</button>
+</mat-list-item>

@@ -8,7 +8,14 @@ import(
 	"io/ioutil" 
 	"encoding/json"
 	"strconv"
+	"github.com/gorilla/websocket"
 )
+
+var upgrader = websocket.Upgrader{
+	ReadBufferSize: 1024,
+	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool { return true },
+}
 
 // STRUCTS PARA MODULO RAM
 type Model_Ram struct {
@@ -49,11 +56,20 @@ type Send_Cpu struct {
 	Desconocido int 	`json:"desconocido"`
 	Total		int 	`json:"total"`
 	Procesos []Model_Cpu	`json:"procesos"`
+	Status 		int 	`json:"status"`
 }
 
 type User struct {
 	Name string	`json:"name"`
 	Uid  int 	`json:"uid"`
+}
+
+type Kill struct {
+	Pid int 	`json:"pid"`
+}
+
+type Status struct{
+	Status string `json:"status"`
 }
 
 // home
@@ -75,7 +91,11 @@ func getRamData(w http.ResponseWriter, r *http.Request){
 		log.Fatal(err)
 	}
 	//fmt.Printf("%+v\n", ram_data)
+	w.Header().Set("Content-Type", "application/json")
+	enableCors(&w)
 	json.NewEncoder(w).Encode(ram_data)
+	//jsonEnviar, _ := json.Marshal(ram_data)
+	//req, err := http.NewRequest()
 }
 
 
@@ -174,21 +194,71 @@ func getCpuData(w http.ResponseWriter, r *http.Request){
 			procesos[i].User = nombre_usuario
 		}
 	}
-	data_cpu := Send_Cpu{contRunning, contStopped, contSleeping, uninterruptible, contZombie, desconocido, total, procesos}
+	status := 200
+	data_cpu := Send_Cpu{contRunning, contStopped, contSleeping, uninterruptible, contZombie, desconocido, total, procesos, status}
 
-	//json.NewEncoder(w).Encode(procesos)
+	w.Header().Set("Content-Type", "application/json")
+	enableCors(&w)
 	json.NewEncoder(w).Encode(data_cpu)
 	//fmt.Fprintf(w, texto)
 }
 
+// eliminar un proceso
+func killProcess(w http.ResponseWriter, r *http.Request){
+	//kill <pid>
+	w.Header().Set("Content-Type", "application/json")
+	enableCors(&w)
+	var body Kill
+	var estado Status
+
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil{
+		log.Println("Error en body")
+		estado.Status="400"
+	}else{
+		errr := json.Unmarshal(b, &body)
+		if errr!=nil{
+			log.Println("Error en unmarshal", errr)
+			estado.Status="400"
+		}else{
+			//fmt.Println(body.Pid);
+			if body.Pid==0{
+				fmt.Println("process 0, no se puede eliminar")
+				return
+			}
+			cmd:= exec.Command("sh", "-c", "kill "+strconv.Itoa(body.Pid) )
+			out2, er := cmd.CombinedOutput()
+			
+			if er != nil{
+				//enviar codigo 400
+				estado.Status = "400"
+				log.Println(string(out2))
+			}else{
+				estado.Status = "200"
+			}
+		
+			// si se ejecuto correctamente
+		}
+	}
+	json.NewEncoder(w).Encode(estado)	
+}
 
 // endpoints a consumir
 func setupRoutes(){
 	http.HandleFunc("/", home)
 	http.HandleFunc("/getRam", getRamData)
 	http.HandleFunc("/getCpu", getCpuData)
+	http.HandleFunc("/killProcess", killProcess)
+	//http.HandleFunc("/echo", echo)
 }
 
+// cors
+func enableCors(w *http.ResponseWriter){
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Headers", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+}
 
 func main()  {
 	fmt.Println("Levantando servidor...")
