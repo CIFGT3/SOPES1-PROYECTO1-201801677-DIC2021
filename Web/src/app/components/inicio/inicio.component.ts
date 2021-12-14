@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { interval } from 'rxjs';
+import { interval, BehaviorSubject, Observable, of as observableOf } from 'rxjs';
 import { CpuServiceService } from 'src/app/services/cpu-service.service';
+
+import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { NestedTreeControl } from '@angular/cdk/tree';
+
 
 @Component({
   selector: 'app-inicio',
@@ -22,7 +26,27 @@ export class InicioComponent implements OnInit {
   showLista = true
   showArbol = false
 
-  constructor(private cpuService: CpuServiceService) { }
+  // arbol de procesos
+  nestedTreeControl: NestedTreeControl<any>
+  nestedDataSource: MatTreeNestedDataSource<any>
+  dataChange: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([])
+
+  constructor(private cpuService: CpuServiceService) { 
+    this.nestedTreeControl = new NestedTreeControl<any>(this._getHijos);
+    this.nestedDataSource = new MatTreeNestedDataSource()
+
+    this.dataChange.subscribe(data => this.nestedDataSource.data = data)
+
+  }
+
+  private _getHijos = (node: any) => {return observableOf(node.hijos); } 
+
+  hasNestedChild = (_: number, nodeData:any) => {
+    //console.log(nodeData.hijos)
+    if (nodeData.hijos == undefined){
+      return false
+    }
+    return true}
 
   ngOnInit(): void {
     const obs$ = interval(2000);
@@ -30,6 +54,7 @@ export class InicioComponent implements OnInit {
     obs$.subscribe((d) => {
       this.getInfo()
     })
+    //this.dataChange.next(arreglo)
     //this.getInfo()
   }
 
@@ -47,6 +72,9 @@ export class InicioComponent implements OnInit {
         this.desconocido = res.desconocido 
         this.total = res.total
         this.listaProcesos = res.procesos
+        if(this.showArbol){
+          this.dataChange.next(this.listaProcesos)
+        }
         //console.log(this.listaProcesos[0].process)
       }
       

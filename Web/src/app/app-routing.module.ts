@@ -2,9 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
+import { CpuComponent } from './components/cpu/cpu.component';
+import { MemoriaComponent } from './components/memoria/memoria.component';
 
 const routes: Routes = [
-  { path: '', component: AppComponent }
+  { path: '', component: AppComponent },
+  { path: '/memoria', component: MemoriaComponent},
+  { path: '/cpu', component: CpuComponent}
+
 ];
 
 @NgModule({

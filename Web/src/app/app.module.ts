@@ -11,10 +11,12 @@ import { MemoriaComponent } from './components/memoria/memoria.component';
 import { CpuComponent } from './components/cpu/cpu.component';
 import { ProcesoComponent } from './components/proceso/proceso.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ArbolComponent } from './components/arbol/arbol.component';
 
 import { MatListModule } from '@angular/material/list'
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTreeModule } from '@angular/material/tree'
+import { MatIconModule} from '@angular/material/icon'
+import { MatButtonModule } from '@angular/material/button'
 
 @NgModule({
   declarations: [
@@ -23,8 +25,7 @@ import { MatDividerModule } from '@angular/material/divider';
     InicioComponent,
     MemoriaComponent,
     CpuComponent,
-    ProcesoComponent,
-    ArbolComponent
+    ProcesoComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +33,10 @@ import { MatDividerModule } from '@angular/material/divider';
     HttpClientModule,
     BrowserAnimationsModule,
     MatListModule,
-    MatDividerModule
+    MatDividerModule,
+    MatTreeModule,
+    MatIconModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
