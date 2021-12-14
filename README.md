@@ -19,6 +19,10 @@ Crear componentes
 Crear servicios
 ```ng g s <nombre>```
 
+Libreria de ngx-charts
+
+
+
 ## Modulos
 Realizados en distro Ubuntu 20.04 LTS
 

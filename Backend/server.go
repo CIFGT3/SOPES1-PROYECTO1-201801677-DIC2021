@@ -28,7 +28,7 @@ type Model_Ram struct {
 	Totalhigh int		`json:"totalhigh"`
 	Freehigh int		`json:"freehigh"`
 	Memunit	int			`json:"memunit"`
-	Cache int			`json:"cache"`
+	Cache float64			`json:"cache"`
 }
 
 // STRUCTS PARA MODULO CPU Y PAGINA PRINCIPAL
@@ -90,7 +90,22 @@ func getRamData(w http.ResponseWriter, r *http.Request){
 	if err != nil{
 		log.Fatal(err)
 	}
-	//fmt.Printf("%+v\n", ram_data)
+	// obtener la memoria cache
+	cmdd:= exec.Command("sh", "-c", "free -m | head -2 | tail -1 | awk '{print $6}'")
+	ou, er := cmdd.CombinedOutput()
+	var cache float64
+	if er != nil{
+		cache = 3000
+	}else{
+		num := len(ou)
+		memoria := string(ou[:num-1]) // para quitar salto de linea
+		tot, _ := strconv.Atoi(memoria)
+		cache = float64(tot)
+		//fmt.Println(total_ram)
+	}
+	ram_data.Cache = cache
+
+
 	w.Header().Set("Content-Type", "application/json")
 	enableCors(&w)
 	json.NewEncoder(w).Encode(ram_data)

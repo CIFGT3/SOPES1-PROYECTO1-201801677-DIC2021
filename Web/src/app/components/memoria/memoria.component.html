@@ -1,1 +1,28 @@
-<p>memoria works!</p>
+<app-navbar></app-navbar>
+
+<div class="mx-auto mb-3 mt-5" style="max-width: 800px;">
+
+    <ngx-charts-line-chart
+    [view]="view"
+    scheme="cool"
+    [legend]="legend"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxis]="xAxis"
+    [yAxis]="yAxis"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [timeline]="timeline"
+    [results]="data"
+    (select)="onSelect($event)"
+    (activate)="onActivate($event)"
+    (deactivate)="onDeactivate($event)"
+    >
+    </ngx-charts-line-chart>
+    <div class="text-center mt-0">
+        <h3 class="text-secondary">Memoria total: {{totalram}} MB </h3>
+        <h3 class="text-secondary">Memoria utilizada: {{en_uso}} MB </h3>
+        <h3 class="text-secondary">Memoria: {{porcentaje}}% </h3>
+    </div>
+    
+</div>

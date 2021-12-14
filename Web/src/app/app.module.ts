@@ -17,6 +17,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTreeModule } from '@angular/material/tree'
 import { MatIconModule} from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import { MatButtonModule } from '@angular/material/button'
     MatDividerModule,
     MatTreeModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    NgxChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
