@@ -241,7 +241,7 @@ func getCpuGraphic(w http.ResponseWriter, r * http.Request){
 		num := len(ou)
 		memoria := string(ou[:num-1]) // para quitar salto de linea
 		tot, _ := strconv.ParseFloat(memoria, 64)
-		cpu = float64(tot)/4 // dividido 4 por el numero de cpus que tiene la compu
+		cpu = float64(tot)///4 // este resultado es el % de cpu inactivo
 		status = 200
 	}
 	//fmt.Println(cpu)

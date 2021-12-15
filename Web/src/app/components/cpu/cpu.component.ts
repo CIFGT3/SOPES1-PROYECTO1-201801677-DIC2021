@@ -64,7 +64,7 @@ export class CpuComponent implements OnInit {
 
   getCpuInfo(){
     this.cpuService.getInfoGraphic().subscribe((res:any)=>{
-      this.porcentaje = res.porcentaje
+      this.porcentaje = Math.trunc((100 - res.porcentaje))
       console.log(this.porcentaje)
       var nuevo = {"name":this.getTime(), "value":this.porcentaje}
       //console.log("Insertando nuevo valor: ", nuevo)
