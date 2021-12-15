@@ -7,5 +7,5 @@ class Test(HttpUser):
     def prueba1(self):
         self.client.get("/memo")
     
-    def prueba_home(self):
-        self.client.get("/")
+    def prueba2(self):
+        self.client.get("/prueba")

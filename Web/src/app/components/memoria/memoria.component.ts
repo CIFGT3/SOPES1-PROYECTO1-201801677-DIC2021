@@ -73,7 +73,8 @@ export class MemoriaComponent implements OnInit {
       // en_uso = total - (free + buffers + cache)
       this.totalram = res.totalram
       console.log(this.totalram, '--', res.freeram, '--', res.cache)
-      this.en_uso = this.totalram - (res.freeram + res.cache)+ res.bufferram
+      //this.en_uso = this.totalram - (res.freeram + res.cache)+ res.bufferram
+      this.en_uso = this.totalram - res.freeram - res.cache + res.sharedram + res.bufferram
       this.porcentaje = (this.en_uso/this.totalram)*100
       var nuevo = {"name":this.getTime(), "value":this.porcentaje}
       console.log("Insertando nuevo valor: ", nuevo)

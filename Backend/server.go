@@ -72,9 +72,18 @@ type Status struct{
 	Status string `json:"status"`
 }
 
+type CpuPercent struct {
+	Porcentaje float64 `json:"porcentaje"`
+	Status	int 	`json:"status"`
+}
+
 // home
 func home(w http.ResponseWriter, r *http.Request){
 	fmt.Fprintf(w, "Servidor proyecto 1 de Sistemas Operativos 1")
+}
+
+func prueba(w http.ResponseWriter, r *http.Request){
+	fmt.Fprintf(w, "Endpoint de prueba")
 }
 
 // endpoint para leer el archivo de memoria
@@ -218,6 +227,32 @@ func getCpuData(w http.ResponseWriter, r *http.Request){
 	//fmt.Fprintf(w, texto)
 }
 
+// endpoint para obtener el % de cpu
+func getCpuGraphic(w http.ResponseWriter, r * http.Request){
+	// % de cpu
+	cmdd:= exec.Command("sh", "-c", "top -bn 1 -i -c | head -n 3 | tail -1 | awk {'print $8'}")
+	ou, er := cmdd.CombinedOutput()
+	var cpu float64
+	var status int
+	if er != nil{
+		cpu = 15
+		status = 400
+	}else{
+		num := len(ou)
+		memoria := string(ou[:num-1]) // para quitar salto de linea
+		tot, _ := strconv.ParseFloat(memoria, 64)
+		cpu = float64(tot)/4 // dividido 4 por el numero de cpus que tiene la compu
+		status = 200
+	}
+	//fmt.Println(cpu)
+	var send_data CpuPercent
+	send_data.Porcentaje = cpu
+	send_data.Status = status
+	w.Header().Set("Content-Type", "application/json")
+	enableCors(&w)
+	json.NewEncoder(w).Encode(send_data)
+}
+
 // eliminar un proceso
 func killProcess(w http.ResponseWriter, r *http.Request){
 	//kill <pid>
@@ -262,9 +297,11 @@ func killProcess(w http.ResponseWriter, r *http.Request){
 // endpoints a consumir
 func setupRoutes(){
 	http.HandleFunc("/", home)
+	http.HandleFunc("/prueba", prueba)
 	http.HandleFunc("/getRam", getRamData)
 	http.HandleFunc("/getCpu", getCpuData)
 	http.HandleFunc("/killProcess", killProcess)
+	http.HandleFunc("/getCpuGraphic", getCpuGraphic)
 	//http.HandleFunc("/echo", echo)
 }
 

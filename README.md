@@ -19,8 +19,15 @@ Crear componentes
 Crear servicios
 ```ng g s <nombre>```
 
-Libreria de ngx-charts
+Agregar Angular Material al proyecto
+```ng add @angular/material```
 
+Libreria de ngx-charts
+Para mostrar las graficas
+```npm install @swimlane/ngx-charts --save```
+
+Instalar la siguiente libreria ya que el ngx-charts daba un error
+```npm install @types/d3 --save```
 
 
 ## Modulos

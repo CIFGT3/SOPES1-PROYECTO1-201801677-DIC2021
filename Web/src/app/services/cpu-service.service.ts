@@ -24,6 +24,11 @@ export class CpuServiceService{
     return this.http.get(url,{headers: this.headers}).pipe(map(data=>data))
   }
 
+  getInfoGraphic(){
+    const url = 'http://localhost:8080/getCpuGraphic';
+    return this.http.get(url,{headers: this.headers}).pipe(map(data=>data))
+  }
+
   // post para eliminar un proceso recibiendo su pid
   kill(pid:string){
     const url = 'http://localhost:8080/killProcess';
